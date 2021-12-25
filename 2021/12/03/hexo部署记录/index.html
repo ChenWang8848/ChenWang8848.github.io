@@ -5,7 +5,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="hexo部署记录, Maker &amp; Developer">
-    <meta name="description" content="">
+    <meta name="description" content="hexo指令1.文章的书写hexo new [参数]  &amp;lt;名称&amp;gt;eg: hexo new “新的一篇文章” 其中 layout为_config.yml中的默认参数值。
+-p --path 自定义新文章
+-r --replace ">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -472,7 +474,41 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h1 id="hexo指令"><a href="#hexo指令" class="headerlink" title="hexo指令"></a>hexo指令</h1><h2 id="1-文章的书写"><a href="#1-文章的书写" class="headerlink" title="1.文章的书写"></a>1.文章的书写</h2><p>hexo new [参数]  &lt;名称&gt;<br>eg: hexo new “新的一篇文章” 其中 layout为_config.yml中的默认参数值。</p>
+<pre><code>-p --path 自定义新文章
+-r --replace 存在同名文章，替换
+-s --slug 文章的slug，作为新文章的文件名和发布后的URL
+eg： hexo new page --path about/me &quot;About me&quot;
+</code></pre>
+<p>使用该命令后会自动在source post创建一个新的文章</p>
+<h2 id="2-生成静态文件"><a href="#2-生成静态文件" class="headerlink" title="2.生成静态文件"></a>2.生成静态文件</h2><pre><code>-d 文件生成后部署的网站
+-w 监视文件变动
+-b 或--bail 生成过程中出现异常则抛出。
+-f 或--force 强制重新生成文件
+-c 或--concurrency 最大同时生成文件数量，默认无限制。
+3. 发布草稿
+</code></pre>
+<h2 id="3-发布草稿"><a href="#3-发布草稿" class="headerlink" title="3.发布草稿"></a>3.发布草稿</h2><pre><code>hexo publish [layout] &lt;filename&gt;
+</code></pre>
+<h2 id="4-启动服务器"><a href="#4-启动服务器" class="headerlink" title="4.启动服务器"></a>4.启动服务器</h2><pre><code>hexo server 启动服务器，ctrl+c 结束，默认地址为：http://localhost:4000/
+</code></pre>
+<h2 id="5-部署网站"><a href="#5-部署网站" class="headerlink" title="5.部署网站"></a>5.部署网站</h2><pre><code>hexo deploy 或hexo d
+
+-g 或--generate 部署之前写成静态文件
+</code></pre>
+<h2 id="6-渲染文件"><a href="#6-渲染文件" class="headerlink" title="6.渲染文件"></a>6.渲染文件</h2><pre><code>hexo render &lt;file1&gt; [file2]
+
+-o或--output 设置输出路径
+</code></pre>
+<h2 id="7-清除缓存文件"><a href="#7-清除缓存文件" class="headerlink" title="7. 清除缓存文件"></a>7. 清除缓存文件</h2><pre><code>hexo clean
+</code></pre>
+<h2 id="8-列出网站资料"><a href="#8-列出网站资料" class="headerlink" title="8.列出网站资料"></a>8.列出网站资料</h2><pre><code>hexo list &lt;类型&gt;
+</code></pre>
+<h2 id="9-显示草稿"><a href="#9-显示草稿" class="headerlink" title="9. 显示草稿"></a>9. 显示草稿</h2><pre><code>hexo --deaft
+</code></pre>
+<h2 id="10-自定义当前工作目录"><a href="#10-自定义当前工作目录" class="headerlink" title="10. 自定义当前工作目录"></a>10. 自定义当前工作目录</h2><pre><code> hexo --cwd /path/to/cwd
+</code></pre>
+
                 
             </div>
             <hr/>
