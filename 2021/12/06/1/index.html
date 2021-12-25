@@ -6,9 +6,7 @@
     <meta charset="utf-8">
     <meta name="keywords" content="TB6612GND编码电机控制器, Maker &amp; Developer">
     <meta name="description" content="简介：TB6612FNG编码电机，接口为XH2.54，具有稳压3.3V输出
-原理图：
-期末有点忙，闲暇时间匆匆画了一下，具体说明持续更新，呼呼呼！
-">
+1.简述TB6612FNG是经典款的可编程的电机驱动芯片，也是许多平衡车使用最多的驱动芯片对于平衡车来说，要时刻调整电机的速度和转动方向实现PID控制算法，那么自然">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -488,7 +486,35 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <p>简介：TB6612FNG编码电机，接口为XH2.54，具有稳压3.3V输出</p>
-<p>原理图：<br><img src="https://img-blog.csdnimg.cn/2fce570351c941a989793dc9b97ac847.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA44GK44KC44GE44Gt,size_20,color_FFFFFF,t_70,g_se,x_16" alt="原理图"><br><img src="https://img-blog.csdnimg.cn/e2751bbd51074f59a517746b1d044dad.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA44GK44KC44GE44Gt,size_20,color_FFFFFF,t_70,g_se,x_16" alt="未完工pdb"></p>
+<h1 id="1-简述"><a href="#1-简述" class="headerlink" title="1.简述"></a>1.简述</h1><p>TB6612FNG是经典款的可编程的电机驱动芯片，也是许多平衡车使用最多的驱动芯片<br>对于平衡车来说，要时刻调整电机的速度和转动方向实现PID控制算法，那么自然需要用到IO控制<br>但是单片机的IO带负载能力太弱了，而直流电机是大电流感性负载，所以我们需要功率放大器件，也就是TB6612FNG</p>
+<p>TB6612FNG 是东芝半导体公司生产的一款直流电机驱动器件，它具有大电流MOSFET-H 桥结构，双通道电路输出，可同时驱动 2 个电机。也许大家更熟悉 L298N，其实这两者的使用基本一致的。而且，相比 L298N 的热耗性和外围二极管续流电路，它无需外加散热片，外围电路简单，只需外接电源滤波电容就可以直接驱动电机，利于减小系统尺寸。对于PWM信号输入频率范围，高达100KHz的频率更足以满足我们大部分的要求。</p>
+<p>但介绍这个芯片之后当然不仅仅是造个平衡车，最主要的是想要复制下钢铁侠的语音小助手，实在是太炫酷了，那就加油吧！</p>
+<h1 id="2-芯片管脚说明"><a href="#2-芯片管脚说明" class="headerlink" title="2.芯片管脚说明"></a>2.芯片管脚说明</h1><p><img src="https://img-blog.csdnimg.cn/1fdd87b523884aabb22a67ef42cb3d04.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA44GK44KC44GE44Gt,size_20,color_FFFFFF,t_70,g_se,x_16" alt="芯片原理图"><br>|   管脚  |    说明 |<br>| — | — |<br>|   VM  |直接接电源     |<br>|VCC    |内部逻辑供电一般3.3/5V     |<br>| GND    |     接地|<br>|    STBY |   置高模块才能正常工作  |<br>|  A01   |  电机+   |<br>|  A02   |  电机-   |<br>|   PWMA  |   单片机PWM输出  |<br>|    AIN2 |单片机IO     |<br>|    AIN1 |单片机IO     |</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>停止</th>
+<th>正转</th>
+<th>反转</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AIN1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>AIN2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>对于另外一个输出也是如此。</p>
+<h1 id="3-电机实物说明"><a href="#3-电机实物说明" class="headerlink" title="3.电机实物说明"></a>3.电机实物说明</h1><p><img src="https://img-blog.csdnimg.cn/20181027171306654.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4NzIxMzAy,size_27,color_FFFFFF,t_70" alt="enter description here"><br>画原理图的时候注意这几个线的位置，中间的绿白两根线用于测速，暂时用不到，但在画图的时候我也引出了相应IO，便于后续重复开发。</p>
+<h1 id="4-原理图"><a href="#4-原理图" class="headerlink" title="4.原理图"></a>4.原理图</h1><p>原理图：<br><img src="https://img-blog.csdnimg.cn/2fce570351c941a989793dc9b97ac847.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA44GK44KC44GE44Gt,size_20,color_FFFFFF,t_70,g_se,x_16" alt="原理图"><br><img src="https://img-blog.csdnimg.cn/e2751bbd51074f59a517746b1d044dad.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA44GK44KC44GE44Gt,size_20,color_FFFFFF,t_70,g_se,x_16" alt="未完工pdb"></p>
 <p>期末有点忙，闲暇时间匆匆画了一下，具体说明持续更新，呼呼呼！</p>
 
                 
