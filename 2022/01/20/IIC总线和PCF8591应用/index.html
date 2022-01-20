@@ -4,9 +4,12 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="DHT11模块使用总结, Maker &amp; Developer">
-    <meta name="description" content="对于一个外设来说，它就是我们通过I/O扩展所添加的新的功能，我们只要能够学会外设与主控如何通信，并且能够正确处理数据，即基本掌握了这个模块
-1.模块介绍DHT11 温湿度传感器模块是以 DHT11 温湿度传感器为核心，已含有校准数字信号，可">
+    <meta name="keywords" content="IIC总线和PCF8591应用, Maker &amp; Developer">
+    <meta name="description" content="[TOC]
+1. IIC总线1.0 概述
+ IIC总线全称：Inter-Integrated Circuit，是由飞利浦公司开发出来的一种串行总线协议，它是一种多主机的总线，当发生主机竞争时，有总线仲裁机制。
+
+IIC总线只有两根信号线： ">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +21,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>DHT11模块使用总结 | Maker &amp; Developer</title>
+    <title>IIC总线和PCF8591应用 | Maker &amp; Developer</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -310,12 +313,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">DHT11模块使用总结</h1>
+                    <h1 class="description center-align post-title">IIC总线和PCF8591应用</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +434,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/DIY-%E7%94%B5%E5%AD%90/">
-                                <span class="chip bg-color">DIY,电子</span>
+                            <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/">
+                                <span class="chip bg-color">51单片机</span>
                             </a>
                         
                     </div>
@@ -447,21 +450,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-01-11
+                    2022-01-20
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-01-11
+                    2022-01-20
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    881
+                    992
                 </div>
                 
 
@@ -483,43 +486,52 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>对于一个外设来说，它就是我们通过I/O扩展所添加的新的功能，我们只要能够学会外设与主控如何通信，并且能够正确处理数据，即基本掌握了这个模块</p>
-<h2 id="1-模块介绍"><a href="#1-模块介绍" class="headerlink" title="1.模块介绍"></a>1.模块介绍</h2><pre><code>DHT11 温湿度传感器模块是以 DHT11 温湿度传感器为核心，已含有校准数字信号，可测量环境温度，相对湿度。具有极高的可靠性与卓越的长期稳定性。模块带有电源指示灯
+                <p>[TOC]</p>
+<h1 id="1-IIC总线"><a href="#1-IIC总线" class="headerlink" title="1. IIC总线"></a>1. IIC总线</h1><h2 id="1-0-概述"><a href="#1-0-概述" class="headerlink" title="1.0 概述"></a>1.0 概述</h2><blockquote>
+<pre><code> IIC总线全称：Inter-Integrated Circuit，是由飞利浦公司开发出来的一种串行总线协议，它是一种多主机的总线，当发生主机竞争时，有总线仲裁机制。
 </code></pre>
-<h2 id="2-软件设计"><a href="#2-软件设计" class="headerlink" title="2.软件设计"></a>2.软件设计</h2><h3 id="1-通信数据过程"><a href="#1-通信数据过程" class="headerlink" title="1.通信数据过程"></a>1.通信数据过程</h3><p>主机发送起始引号—-&gt; DHT11检测并发送相应信号——&gt;DHT11发送40位数据—-&gt;DHT11发送结束信号</p>
+<p>IIC总线只有两根信号线：<br>                        * SDA：数据线<br>                        * SCL：时钟线<br>当总线空闲时，这两根数据线均处于高电平的状态，数据传输时由设备拉低总线。</p>
+</blockquote>
+<p><strong>IIC的通信原理可以通过数据手册了解，想要写底层代码的时候对比着写就好，在蓝桥杯中提供了底层代码，因此我们只需要了解官方代码如何使用就好。</strong></p>
+<p>蓝桥杯提供的驱动函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#ifndef _IIC_H</span><br><span class="line">#define _IIC_H</span><br><span class="line"></span><br><span class="line">void IIC_Start(void); //起始信号</span><br><span class="line">void IIC_Stop(void);  //停止信号</span><br><span class="line">bit IIC_WaitAck(void);  //等待应答</span><br><span class="line">void IIC_SendAck(bit ackbit); //产生应答</span><br><span class="line">void IIC_SendByte(unsigned char byt); //发生数据</span><br><span class="line">unsigned char IIC_RecByte(void); //接受数据</span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<h2 id="1-1-IIC数据传输过程"><a href="#1-1-IIC数据传输过程" class="headerlink" title="1.1 IIC数据传输过程"></a>1.1 IIC数据传输过程</h2><p>在没有硬件IIC外设的微处理器中，需要根据总线时序设计IIC接口的驱动程序。包括：起始信号、停止信号、产生应答、等待应答、发送数据和接收数据6个函数，如上.h文件当中的函数，那如何利用这些函数实现数据的传输<br>与接受？<br><strong>流程</strong><br>|开始信号  |写入地址  |等待响应  | 得到响应 |发送数据  |等待响应|停止信号|<br>| — | — | — | — | — |— |— |<br>| S | 从机地址 |0  |A  | 数据 |A/非A|P|<br>ps：当接受信号时，数据后面为非应答信号。<br>每发送或接受一个数据都需要经过这样的流程，那么利用官方函数代码就可以这样写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// ***********发送数据****************</span><br><span class="line">	IIC_Start();		//IIC总线起始信号							</span><br><span class="line">	IIC_SendByte(0xxx); 	//设备地址		</span><br><span class="line">	IIC_WaitAck();  	//等待从机应答		</span><br><span class="line">	IIC_SendByte(0xxx); 	//写入数据</span><br><span class="line">	IIC_WaitAck();  	//等待从机应答						</span><br><span class="line">	IIC_Stop(); 		//IIC总线停止信号	</span><br><span class="line">    </span><br><span class="line">//**************接受数据**************	</span><br><span class="line">	IIC_Start();		//IIC总线起始信号									</span><br><span class="line">	IIC_SendByte(0xxx); 	//读设备地址		</span><br><span class="line">	IIC_WaitAck(); 		//等待从机应答		</span><br><span class="line">	dat = IIC_RecByte();	//读取数据 			</span><br><span class="line">	IIC_Ack(0); 		//产生非应答信号				</span><br><span class="line">	IIC_Stop(); 		//IIC总线停止信号</span><br><span class="line">————————————————</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="2-PCF8591"><a href="#2-PCF8591" class="headerlink" title="2.PCF8591"></a>2.PCF8591</h1><h2 id="2-1概述"><a href="#2-1概述" class="headerlink" title="2.1概述"></a>2.1概述</h2><blockquote>
+<p>PCF8591是具有IIC接口的8位A/D和D/A转换芯片，具有4路模拟输入、一路DAC输出和一个IIC总线接口。</p>
+</blockquote>
+<p><strong>原理图</strong>：<br><img src="https://img-blog.csdnimg.cn/f0cdad7a2415428399be2e3bb982bd9d.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA44GK44KC44GE44Gt,size_20,color_FFFFFF,t_70,g_se,x_16" alt="原理图"></p>
+<h2 id="2-2设备地址"><a href="#2-2设备地址" class="headerlink" title="2.2设备地址"></a>2.2设备地址</h2><p>PCF8591设备地址包括固定部分和可编程的部分，如图：<br><img src="https://img-blog.csdnimg.cn/02275fa5a9ce4d0fa25b2eb93e587692.png" alt="enter description here"></p>
+<h2 id="2-3控制"><a href="#2-3控制" class="headerlink" title="2.3控制"></a>2.3控制</h2><p>PCF8591内部控制寄存器，当确定地址后，向该地址发送数据来控制器件的功能。<br><img src="https://img-blog.csdnimg.cn/ef5f6d49f55c42c6bc8a0e6b148c12e9.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA44GK44KC44GE44Gt,size_20,color_FFFFFF,t_70,g_se,x_16" alt="enter description here"></p>
 <table>
 <thead>
 <tr>
-<th>名称</th>
-<th>单总线线格式定义</th>
+<th>7</th>
+<th>6</th>
+<th>5  和4</th>
+<th>3</th>
+<th>2</th>
+<th>1  和0</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>起始信号</td>
-<td>主机把数据总线拉低 T(18ms &lt; T &lt; 30ms)，</td>
-</tr>
-<tr>
-<td>响应信号</td>
-<td>DHT11 把数据总线拉低 83us 以响应主机的起始信号，再拉高 87us 通知主机准备接收数据</td>
-</tr>
-<tr>
-<td>数据</td>
-<td>DHT11 在拉高总线 87us 后紧接着发送 40Bit 数据（高位先出，后边会介绍数据格式与时序</td>
-</tr>
-<tr>
-<td>结束信号</td>
-<td>DHT11 在发送完 40Bit 数据后接着输出 54us 低电平作为结束信号，然后转为输入状态</td>
+<td>固定值</td>
+<td>模拟输出控制</td>
+<td>模拟量输入方式选择</td>
+<td>固定值</td>
+<td>自动增量控制</td>
+<td>A/D通道选择</td>
 </tr>
 </tbody></table>
-<p>40位数据： 湿度高8位，温度低8位，温度高8位，温度低8位，8位校验位<br>低八位都表示小数，高八位表示整数<br>8 位校验和 = 湿度高 8 位 + 湿度低 8 位 + 温度高 8 位 + 温度低 8位</p>
-<h3 id="2-通信的实现"><a href="#2-通信的实现" class="headerlink" title="2.通信的实现"></a>2.通信的实现</h3><p>   注意：主机对数据总线操作应当配置为输出模式；DHT11对数据总线操作时，主机应该配置为输入模式<br>       1. 主机发送起始信号并检测响应信号（主机发送一个T（18ms&lt;T&lt;30ms）低电平,DHT11 把数据总线拉低 83us 以响应主机的起始信号，再拉高 87us 通知主机准备接收数据)</p>
-<blockquote>
-<pre><code>主 机 配 置 通 讯 IO 为 输 出 模 式 --&gt; 输 出 低 电 平(18ms&lt;T&lt;30ms)--&gt;主机把总线拉高，延迟 10us 后配置为输入模式准备检测 DHT11 的响应信号--&gt;等待DHT11 的 83us 的低电平到来，并设置超时时间（超时返回出错信号）--&gt;检测到 DHT11 的低电平后等待DHT11 的 87us 高电平到来，并设置超时时间（超时返回出错信号）--&gt;检测到高电平返回 0，表示 DHT11 响应成功       
-</code></pre>
-</blockquote>
-<p> 2.接受接受DHT11发送的数据（高位先出）。数据 0 由 54us 的低电平与 23<del>27us 的高电平构成；数据 1 由 54us 的低电平与 68</del>74us构成<br> 3.主机读取 DHT11 发送的40bit数据并检测结束信号。DHT11 发送完 40Bit 数据后会继续输<br>出54us的低电平作为结束信号，然后转为输入状态。这时主机在检测到 DHT11 的结束电平结束后应<br>该配置为输出模式并输出高电平</p>
-<h3 id="3-最后"><a href="#3-最后" class="headerlink" title="3.最后"></a>3.最后</h3><p>看到这是不是感觉很麻烦，哈哈哈哈起始这些细节都不需要我们去做，有轮子多香，造啥轮子。买模块的时候附带的资料，一般都有库文件，我们只需要在主函数调用相应的API使用即可。但懂得具体的原理会让我们写程序时心里有底，出错会具体分析，增加代码的阅读能力，所以这一步还是非常必要的。</p>
-
+<h2 id="2-4A-D转换流程"><a href="#2-4A-D转换流程" class="headerlink" title="2.4A/D转换流程"></a>2.4A/D转换流程</h2><ul>
+<li>1–发送写设备地址，选择IIC总线上的PCF8591器件。</li>
+<li>2–发送控制字节，选择模拟量输入模式和通道。</li>
+<li>3–发送读设备地址，选择IIC总线上的PCF8591器件。</li>
+<li>4–读取PCF8591中目标通道的数据。</li>
+</ul>
+<h1 id="3-实例"><a href="#3-实例" class="headerlink" title="3.实例"></a>3.实例</h1><p>在第十二届蓝桥杯省赛中考察了光敏电阻和电位器电压的采集<br><img src="https://img-blog.csdnimg.cn/522029aa3bb94c6b9b7dd6b1c679cae6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA44GK44KC44GE44Gt,size_20,color_FFFFFF,t_70,g_se,x_16" alt="题目部分"></p>
+<p>在此对电位器的电压进行采样并在数码管进行显示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;reg52.h&quot;</span><br><span class="line">#include &quot;iic.h&quot;</span><br><span class="line">unsigned char Num[10] = &#123;0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90&#125;;</span><br><span class="line">unsigned char dat = 0;</span><br><span class="line">void delay(unsigned char T)&#123;</span><br><span class="line">	while(T--);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void select_74HC138(unsigned char num)&#123;</span><br><span class="line">	switch(num)&#123;</span><br><span class="line">		case 4: </span><br><span class="line">			 P2 = (P2 &amp; 0x1f) |0x80;               //led</span><br><span class="line">			break;</span><br><span class="line">		case 5: </span><br><span class="line">			P2 = (P2 &amp; 0x1f) |0xa0;                  //蜂鸣器</span><br><span class="line">			break;</span><br><span class="line">		case 6:	</span><br><span class="line">			P2 = (P2 &amp; 0x1f) |0xc0;				  //位置</span><br><span class="line">			break;</span><br><span class="line">		case 7:	</span><br><span class="line">			P2 = (P2 &amp; 0x1f) |0xe0; 				  //数据</span><br><span class="line">			break;</span><br><span class="line">		case 0:</span><br><span class="line">			P2 = P2 &amp; 0x1f ;</span><br><span class="line">			break;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">// ******************关闭蜂鸣器和led*************</span><br><span class="line">void system_Init()&#123;</span><br><span class="line">	select_74HC138(4);	</span><br><span class="line">	P0 = 0xff;</span><br><span class="line">	select_74HC138(5);	</span><br><span class="line">	P0 = 0x00;	</span><br><span class="line">	select_74HC138(0);	</span><br><span class="line">&#125;</span><br><span class="line">//**************************************************</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//************************数码管显示****************</span><br><span class="line">void Desplay(unsigned char dat , unsigned  pos)&#123;</span><br><span class="line">    P0 = 0xff;</span><br><span class="line">	 select_74HC138(6);</span><br><span class="line">	 P0 = 0x01 &lt;&lt; pos;</span><br><span class="line">	 select_74HC138(7);</span><br><span class="line">	 P0 = dat;</span><br><span class="line">&#125;</span><br><span class="line">void display_smg()&#123;</span><br><span class="line">	Desplay(Num[dat/100],5);</span><br><span class="line">	delay(100);</span><br><span class="line">	Desplay(Num[(dat%100)/10],6);</span><br><span class="line">	delay(100);</span><br><span class="line">	Desplay(Num[(dat%100)%10],7);</span><br><span class="line">	delay(100);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void read_rb2()&#123;</span><br><span class="line">	IIC_Start();</span><br><span class="line">	IIC_SendByte(0x90);</span><br><span class="line">	IIC_WaitAck();</span><br><span class="line">	IIC_SendByte(0x03);</span><br><span class="line">	IIC_WaitAck();</span><br><span class="line">	IIC_Stop();</span><br><span class="line">	display_smg();</span><br><span class="line"></span><br><span class="line">	IIC_Start();</span><br><span class="line">	IIC_SendByte(0x91);</span><br><span class="line">	IIC_WaitAck();</span><br><span class="line">	dat = IIC_RecByte();</span><br><span class="line">	IIC_SendAck(0);</span><br><span class="line">	IIC_Stop();</span><br><span class="line">	display_smg();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
                 
             </div>
             <hr/>
@@ -545,7 +557,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/01/11/DHT11%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/">http://example.com/2022/01/11/DHT11%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/</a>
+                    <a href="http://example.com/2022/01/20/IIC%E6%80%BB%E7%BA%BF%E5%92%8CPCF8591%E5%BA%94%E7%94%A8/">http://example.com/2022/01/20/IIC%E6%80%BB%E7%BA%BF%E5%92%8CPCF8591%E5%BA%94%E7%94%A8/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -583,8 +595,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/DIY-%E7%94%B5%E5%AD%90/">
-                                    <span class="chip bg-color">DIY,电子</span>
+                                <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/">
+                                    <span class="chip bg-color">51单片机</span>
                                 </a>
                             
                         </div>
@@ -626,7 +638,7 @@
 <script src="/libs/gitment/gitment.js"></script>
 <script>
 var gitment = new Gitment({
-    id: 'Tue Jan 11 2022 19:33:59 GMT+0800',
+    id: 'Thu Jan 20 2022 16:25:57 GMT+0800',
     owner: '',
     repo: '',
     oauth: {
@@ -657,9 +669,10 @@ gitment.render('gitment-content');
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2022/01/20/IIC%E6%80%BB%E7%BA%BF%E5%92%8CPCF8591%E5%BA%94%E7%94%A8/">
                     <div class="card-image">
@@ -677,9 +690,9 @@ gitment.render('gitment-content');
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-01-20
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-20
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -688,6 +701,7 @@ gitment.render('gitment-content');
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -706,13 +720,13 @@ gitment.render('gitment-content');
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/01/11/%E8%93%9D%E6%A1%A5%E6%9D%AF%E7%AC%94%E8%AE%B0%E6%B1%87%E6%80%BB%EF%BC%88%E4%B8%80%EF%BC%89/">
+                <a href="/2022/01/11/DHT11%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="蓝桥杯笔记汇总（一）">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="DHT11模块使用总结">
                         
-                        <span class="card-title">蓝桥杯笔记汇总（一）</span>
+                        <span class="card-title">DHT11模块使用总结</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -736,8 +750,8 @@ gitment.render('gitment-content');
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%8D%95%E7%89%87%E6%9C%BA/">
-                        <span class="chip bg-color">单片机</span>
+                    <a href="/tags/DIY-%E7%94%B5%E5%AD%90/">
+                        <span class="chip bg-color">DIY,电子</span>
                     </a>
                     
                 </div>
