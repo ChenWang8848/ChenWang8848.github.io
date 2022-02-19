@@ -9,7 +9,8 @@
 1. IIC总线1.0 概述
  IIC总线全称：Inter-Integrated Circuit，是由飞利浦公司开发出来的一种串行总线协议，它是一种多主机的总线，当发生主机竞争时，有总线仲裁机制。
 
-IIC总线只有两根信号线： ">
+IIC总线只有两根信号线：
+">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -490,8 +491,13 @@ IIC总线只有两根信号线： ">
 <h1 id="1-IIC总线"><a href="#1-IIC总线" class="headerlink" title="1. IIC总线"></a>1. IIC总线</h1><h2 id="1-0-概述"><a href="#1-0-概述" class="headerlink" title="1.0 概述"></a>1.0 概述</h2><blockquote>
 <pre><code> IIC总线全称：Inter-Integrated Circuit，是由飞利浦公司开发出来的一种串行总线协议，它是一种多主机的总线，当发生主机竞争时，有总线仲裁机制。
 </code></pre>
-<p>IIC总线只有两根信号线：<br>                        * SDA：数据线<br>                        * SCL：时钟线<br>当总线空闲时，这两根数据线均处于高电平的状态，数据传输时由设备拉低总线。</p>
+<p>IIC总线只有两根信号线：</p>
 </blockquote>
+<ul>
+<li> SDA：数据线</li>
+<li>  SCL：时钟线</li>
+</ul>
+<p>当总线空闲时，这两根数据线均处于高电平的状态，数据传输时由设备拉低总线。</p>
 <p><strong>IIC的通信原理可以通过数据手册了解，想要写底层代码的时候对比着写就好，在蓝桥杯中提供了底层代码，因此我们只需要了解官方代码如何使用就好。</strong></p>
 <p>蓝桥杯提供的驱动函数：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#ifndef _IIC_H</span><br><span class="line">#define _IIC_H</span><br><span class="line"></span><br><span class="line">void IIC_Start(void); //起始信号</span><br><span class="line">void IIC_Stop(void);  //停止信号</span><br><span class="line">bit IIC_WaitAck(void);  //等待应答</span><br><span class="line">void IIC_SendAck(bit ackbit); //产生应答</span><br><span class="line">void IIC_SendByte(unsigned char byt); //发生数据</span><br><span class="line">unsigned char IIC_RecByte(void); //接受数据</span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
@@ -669,18 +675,17 @@ gitment.render('gitment-content');
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/01/20/IIC%E6%80%BB%E7%BA%BF%E5%92%8CPCF8591%E5%BA%94%E7%94%A8/">
+                <a href="/2022/02/19/zzu%E8%87%AA%E5%8A%A8%E6%89%93%E5%8D%A1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="IIC总线和PCF8591应用">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="zzu自动打卡">
                         
-                        <span class="card-title">IIC总线和PCF8591应用</span>
+                        <span class="card-title">zzu自动打卡</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -690,9 +695,9 @@ gitment.render('gitment-content');
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-20
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-02-19
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -701,12 +706,11 @@ gitment.render('gitment-content');
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/">
-                        <span class="chip bg-color">51单片机</span>
+                    <a href="/tags/%E7%BC%96%E7%A8%8B/">
+                        <span class="chip bg-color">编程</span>
                     </a>
                     
                 </div>
